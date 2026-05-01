@@ -27,7 +27,7 @@ CORS(app)
 
 # Serve frontend static files
 FRONTEND_DIR = os.path.normpath(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend")
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "public")
 )
 
 # ---------------------------------------------------------------------------
