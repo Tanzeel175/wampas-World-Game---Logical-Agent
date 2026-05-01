@@ -1,8 +1,8 @@
-# Wumpus World — Dynamic Logic Agent 🏛️
+# Wumpus World — Dynamic Logic Agent
 
 A **web-based Knowledge-Based AI Agent** that navigates a Wumpus World grid using **Propositional Logic** and **Resolution Refutation**. The agent receives percepts (Breeze, Stench) as it moves and uses logical inference to deduce which cells are safe.
 
-## 🎯 Features
+##  Features
 
 - **Dynamic Grid Sizing** — User-defined Rows × Columns (3–10)
 - **Random Hazard Placement** — Pits and Wumpus are randomly placed each episode
@@ -12,7 +12,7 @@ A **web-based Knowledge-Based AI Agent** that navigates a Wumpus World grid usin
 - **Metrics Dashboard** — Live inference step count, KB size, visited/safe cell counts
 - **Move History Log** — Scrollable log of every agent action and percept
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────────┐    REST API    ┌──────────────────────────┐
@@ -26,7 +26,7 @@ A **web-based Knowledge-Based AI Agent** that navigates a Wumpus World grid usin
 └─────────────────────┘               └──────────────────────────┘
 ```
 
-## 🚀 How to Run Locally
+##  How to Run Locally
 
 ### Prerequisites
 - Python 3.8+
@@ -53,7 +53,7 @@ python backend/app.py
 
 Open **http://localhost:5000** in your browser.
 
-## 🧠 How the Inference Engine Works
+##  How the Inference Engine Works
 
 ### 1. Knowledge Base (KB)
 When the agent visits a cell and perceives:
@@ -80,7 +80,7 @@ To prove cell (r,c) is safe:
 - **Clause Length Limit** — Prevents combinatorial explosion
 - **Pair Tracking** — Avoids re-resolving identical clause pairs
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Component | Technology |
 |-----------|-----------|
@@ -89,6 +89,6 @@ To prove cell (r,c) is safe:
 | Logic     | Propositional Logic, CNF, Resolution |
 | Styling   | Custom CSS with Glassmorphism |
 
-## 📝 License
+##  License
 
 This project was developed as part of an AI course assignment.
