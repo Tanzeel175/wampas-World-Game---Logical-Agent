@@ -6,7 +6,12 @@ arrow shooting, and inference-driven pathfinding.
 """
 
 import os
+import sys
 from collections import deque
+
+# Ensure sibling modules are importable (needed for Vercel serverless)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
