@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dynamic Wumpus World Logic Agent using propositional logic and resolution refutation.">
+    <title>Wumpus World Logic Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header id="app-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <span class="logo-emoji">🏛️</span>
+                    <div class="logo-glow"></div>
+                </div>
+                <div class="logo-text">
+                    <h1>Wumpus World</h1>
+                    <p class="subtitle">Dynamic Logic Agent — Knowledge-Based Pathfinding</p>
+                </div>
+            </div>
+            <div class="header-badges">
+                <span class="badge badge-ai">🤖 AI Agent</span>
+                <span class="badge badge-logic">🧠 Propositional Logic</span>
+                <span class="badge badge-resolution">⚡ Resolution Refutation</span>
+            </div>
+        </div>
+    </header>
+
+    <main id="app-main">
+        <!-- CONTROLS -->
+        <section id="controls-panel" class="glass-panel">
+            <h2 class="panel-title"><span class="panel-icon">⚙️</span> Game Controls</h2>
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label for="input-rows">Rows</label>
+                    <input type="number" id="input-rows" min="3" max="10" value="4" class="control-input">
+                </div>
+                <div class="control-group">
+                    <label for="input-cols">Columns</label>
+                    <input type="number" id="input-cols" min="3" max="10" value="4" class="control-input">
+                </div>
+                <div class="control-group control-group-full">
+                    <button id="btn-new-game" class="btn btn-primary"><span class="btn-icon">🎮</span> New Game</button>
+                </div>
+                <div class="control-group">
+                    <button id="btn-step" class="btn btn-accent" disabled><span class="btn-icon">👣</span> Step</button>
+                </div>
+                <div class="control-group">
+                    <button id="btn-auto-solve" class="btn btn-success" disabled><span class="btn-icon">🚀</span> Auto Solve</button>
+                </div>
+                <div class="control-group control-group-full">
+                    <button id="btn-reveal" class="btn btn-danger" disabled><span class="btn-icon">👁️</span> Reveal World</button>
+                </div>
+            </div>
+
+            <!-- ARROW SECTION -->
+            <div id="arrow-section" class="arrow-section" style="display:none;">
+                <h3 class="panel-title-small"><span class="panel-icon">🏹</span> Arrow</h3>
+                <div id="arrow-status" class="arrow-status">
+                    <span class="arrow-icon">🏹</span>
+                    <span id="arrow-text">1 arrow available</span>
+                </div>
+                <button id="btn-shoot" class="btn btn-arrow" disabled>
+                    <span class="btn-icon">🎯</span> Shoot Arrow
+                </button>
+                <p id="arrow-hint" class="arrow-hint" style="display:none;">
+                    Click an adjacent cell on the grid to shoot!
+                </p>
+            </div>
+
+            <!-- POINTS DISPLAY -->
+            <div id="points-section" class="points-section" style="display:none;">
+                <div class="points-display">
+                    <span class="points-label">SCORE</span>
+                    <span class="points-value" id="points-value">0</span>
+                </div>
+                <div class="points-breakdown">
+                    <div class="points-rule">🚶 Move: <strong>-1 pt</strong></div>
+                    <div class="points-rule">💰 Gold: <strong>+70 pts</strong></div>
+                    <div class="points-rule">🏹 Shoot: <strong>-20 pts</strong></div>
+                    <div class="points-rule">🎯 Kill: <strong>+10 pts</strong></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRID -->
+        <section id="grid-section">
+            <div id="grid-container" class="glass-panel">
+                <div id="grid-placeholder" class="placeholder-message">
+                    <div class="placeholder-icon">🗺️</div>
+                    <h3>Configure &amp; Start a New Game</h3>
+                    <p>Set grid dimensions and click <strong>New Game</strong> to begin.</p>
+                    <p class="placeholder-goal">🎯 Goal: Find the gold and return home!</p>
+                </div>
+                <div id="game-grid" class="game-grid" style="display:none;"></div>
+                <div id="game-over-overlay" class="game-over-overlay" style="display:none;">
+                    <div class="game-over-content">
+                        <div id="game-over-icon" class="game-over-icon"></div>
+                        <h2 id="game-over-title"></h2>
+                        <p id="game-over-message"></p>
+                        <div id="game-over-score" class="game-over-score"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="grid-legend" class="glass-panel legend-panel">
+                <h3 class="panel-title-small">Legend</h3>
+                <div class="legend-items">
+                    <div class="legend-item"><span class="legend-color legend-agent"></span> Agent</div>
+                    <div class="legend-item"><span class="legend-color legend-safe"></span> Safe</div>
+                    <div class="legend-item"><span class="legend-color legend-unknown"></span> Unknown</div>
+                    <div class="legend-item"><span class="legend-color legend-pit"></span> Pit</div>
+                    <div class="legend-item"><span class="legend-color legend-wumpus"></span> Wumpus</div>
+                    <div class="legend-item"><span class="legend-color legend-breeze"></span> Breeze</div>
+                    <div class="legend-item"><span class="legend-color legend-stench"></span> Stench</div>
+                    <div class="legend-item"><span class="legend-color legend-gold"></span> Gold</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL -->
+        <aside id="right-panel">
+            <section id="percepts-panel" class="glass-panel">
+                <h2 class="panel-title"><span class="panel-icon">📡</span> Current Percepts</h2>
+                <div id="percepts-display" class="percepts-grid">
+                    <div class="percept-item" id="percept-breeze">
+                        <div class="percept-icon">💨</div>
+                        <div class="percept-label">Breeze</div>
+                        <div class="percept-status inactive">—</div>
+                    </div>
+                    <div class="percept-item" id="percept-stench">
+                        <div class="percept-icon">☠️</div>
+                        <div class="percept-label">Stench</div>
+                        <div class="percept-status inactive">—</div>
+                    </div>
+                    <div class="percept-item" id="percept-glitter">
+                        <div class="percept-icon">✨</div>
+                        <div class="percept-label">Glitter</div>
+                        <div class="percept-status inactive">—</div>
+                    </div>
+                    <div class="percept-item" id="percept-scream">
+                        <div class="percept-icon">😱</div>
+                        <div class="percept-label">Scream</div>
+                        <div class="percept-status inactive">—</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="metrics-panel" class="glass-panel">
+                <h2 class="panel-title"><span class="panel-icon">📊</span> Real-Time Metrics</h2>
+                <div id="metrics-display" class="metrics-grid">
+                    <div class="metric-card metric-card-highlight">
+                        <div class="metric-value metric-value-points" id="metric-points">0</div>
+                        <div class="metric-label">Score (pts)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="metric-steps">0</div>
+                        <div class="metric-label">Agent Steps</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="metric-inference">0</div>
+                        <div class="metric-label">Inference Steps</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="metric-clauses">0</div>
+                        <div class="metric-label">KB Clauses</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="metric-visited">0</div>
+                        <div class="metric-label">Cells Visited</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="metric-safe">0</div>
+                        <div class="metric-label">Proven Safe</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STATUS BANNER -->
+            <section id="status-banner" class="glass-panel status-banner" style="display:none;">
+                <div id="status-icon" class="status-icon"></div>
+                <div id="status-text" class="status-text"></div>
+            </section>
+
+            <section id="log-panel" class="glass-panel">
+                <h2 class="panel-title"><span class="panel-icon">📜</span> Move History</h2>
+                <div id="move-log" class="move-log">
+                    <div class="log-placeholder">No moves yet. Start a game!</div>
+                </div>
+            </section>
+        </aside>
+    </main>
+
+    <footer id="app-footer">
+        <p>Wumpus World Logic Agent &mdash; AI Assignment 6 &mdash; Knowledge-Based Agent with Resolution Refutation</p>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/grid.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
